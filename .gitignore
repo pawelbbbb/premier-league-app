@@ -1,0 +1,34 @@
+# Gradle
+.gradle/
+build/
+*/build/
+
+# Android Studio
+.idea/
+*.iml
+
+# Local config
+local.properties
+
+# Kotlin
+.kotlin/
+
+# Logs
+*.log
+
+# Generated files
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# APK
+*.apk
+*.aab
+
+# Room / KSP
+app/build/generated/
+app/build/kspCaches/
