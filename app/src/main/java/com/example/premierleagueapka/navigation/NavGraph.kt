@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.premierleagueapka.ui.screens.MatchesScreen
 import com.example.premierleagueapka.ui.screens.MatchstatsScreen
+import com.example.premierleagueapka.ui.screens.MediaScreen
 import com.example.premierleagueapka.ui.screens.MenuScreen
 import com.example.premierleagueapka.ui.screens.NewsScreen
 import com.example.premierleagueapka.ui.screens.SettingsScreen
@@ -43,8 +44,12 @@ fun NavGraph(navController: NavHostController) {
             PlayerStatsScreen(navController)
         }
 
-        composable("news") {
+        composable("newsy") {
             NewsScreen(navController)
+        }
+
+        composable("media") {
+            MediaScreen(navController)
         }
 
         composable("settings") {

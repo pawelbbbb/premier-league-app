@@ -9,6 +9,7 @@ data class PlayerStatsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val playerName: String,
+    val teamName: String,
     val goals: Int,
     val assists: Int
 )

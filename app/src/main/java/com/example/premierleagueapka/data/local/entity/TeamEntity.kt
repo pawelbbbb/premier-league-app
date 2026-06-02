@@ -9,5 +9,6 @@ data class TeamEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val points: Int
+    val points: Int,
+    val goalBalance: Int
 )
