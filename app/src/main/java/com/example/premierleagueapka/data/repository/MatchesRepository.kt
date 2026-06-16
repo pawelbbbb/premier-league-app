@@ -15,6 +15,15 @@ class MatchesRepository(
     private val api: FootballApi
 ) {
     suspend fun refreshAndLoad(): MatchesLoadResult = withContext(Dispatchers.IO) {
+        val local = db.matchDao().getAll()
+        if (local.isNotEmpty()) {
+            return@withContext MatchesLoadResult(
+                matches = local,
+                source = "Room lokalnie",
+                error = null
+            )
+        }
+
         val apiResult = runCatching {
             val remote = api.getPremierLeagueMatches()
                 .matches
@@ -63,11 +72,27 @@ class MatchesRepository(
     }
 
     suspend fun refreshTable(): List<TeamEntity> = withContext(Dispatchers.IO) {
+        val localTeams = db.teamDao().getAll()
+        if (localTeams.isNotEmpty()) {
+            return@withContext localTeams
+        }
+
+        val localMatches = db.matchDao().getAll()
+        if (localMatches.isNotEmpty()) {
+            val table = buildTable(localMatches)
+            db.teamDao().insertAll(table)
+            return@withContext db.teamDao().getAll()
+        }
+
         val result = refreshAndLoad()
-        val table = buildTable(result.matches)
-        db.teamDao().deleteAll()
-        db.teamDao().insertAll(table)
-        db.teamDao().getAll()
+        if (result.matches.isEmpty()) {
+            emptyList()
+        } else {
+            val table = buildTable(result.matches)
+            db.teamDao().deleteAll()
+            db.teamDao().insertAll(table)
+            db.teamDao().getAll()
+        }
     }
 
     private suspend fun saveTable(matches: List<MatchEntity>) {

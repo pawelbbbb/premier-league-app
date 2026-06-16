@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.premierleagueapka.data.local.database.DatabaseProvider
 import com.example.premierleagueapka.data.local.entity.MatchEntity
+import com.example.premierleagueapka.ui.components.AppCardBorder
 import com.example.premierleagueapka.ui.components.AppScreen
 import com.example.premierleagueapka.ui.components.TeamBadge
 import com.example.premierleagueapka.viewmodel.MatchesViewModel
@@ -26,6 +28,7 @@ fun MatchesScreen(navController: NavController) {
     val viewModel = remember { MatchesViewModel(db) }
 
     var selectedRound by remember { mutableStateOf(1) }
+    val rounds = remember { (1..38).toList() }
 
     LaunchedEffect(Unit) {
         viewModel.load()
@@ -37,12 +40,12 @@ fun MatchesScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items((1..38).toList()) { round ->
-                    FilterChip(
-                        selected = selectedRound == round,
-                        onClick = { selectedRound = round },
+                    items(rounds) { round ->
+                        FilterChip(
+                            selected = selectedRound == round,
+                            onClick = { selectedRound = round },
                             label = { Text(round.toString()) }
-                    )
+                        )
                     }
                 }
             }
@@ -64,7 +67,7 @@ fun MatchesScreen(navController: NavController) {
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     }
-                    items(roundMatches) { match ->
+                    items(roundMatches, key = { it.id }) { match ->
                         MatchRow(match) { navController.navigate("match_stats/${match.id}") }
                     }
                 }
@@ -77,8 +80,9 @@ fun MatchesScreen(navController: NavController) {
 private fun MatchRow(match: MatchEntity, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        tonalElevation = 1.dp,
-        shadowElevation = 1.dp,
+        color = MaterialTheme.colorScheme.surface,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, AppCardBorder),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -87,7 +91,7 @@ private fun MatchRow(match: MatchEntity, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TeamBadge(match.homeTeam)
+            TeamBadge(match.homeTeam, Modifier.size(34.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     matchScore(match),
@@ -99,7 +103,7 @@ private fun MatchRow(match: MatchEntity, onClick: () -> Unit) {
                     style = MaterialTheme.typography.labelSmall
                 )
             }
-            TeamBadge(match.awayTeam)
+            TeamBadge(match.awayTeam, Modifier.size(34.dp))
         }
     }
 }

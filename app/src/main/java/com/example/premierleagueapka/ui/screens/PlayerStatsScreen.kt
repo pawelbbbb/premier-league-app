@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,6 +33,14 @@ fun PlayerStatsScreen(navController: NavController) {
     val context = LocalContext.current
     val db = DatabaseProvider.getDatabase(context)
     val viewModel = remember { PlayerStatsViewModel(db) }
+    val sortedPlayers = remember {
+        derivedStateOf {
+            viewModel.players.sortedWith(
+                compareByDescending<com.example.premierleagueapka.data.local.entity.PlayerStatsEntity> { it.goals }
+                    .thenByDescending { it.assists }
+            )
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.load()
@@ -52,7 +61,7 @@ fun PlayerStatsScreen(navController: NavController) {
                     }
                     DividerLine()
                 }
-                items(viewModel.players.sortedWith(compareByDescending<com.example.premierleagueapka.data.local.entity.PlayerStatsEntity> { it.goals }.thenByDescending { it.assists })) { player ->
+                items(sortedPlayers.value, key = { it.id }) { player ->
                     Row(
                         Modifier.fillMaxWidth().padding(vertical = 10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween

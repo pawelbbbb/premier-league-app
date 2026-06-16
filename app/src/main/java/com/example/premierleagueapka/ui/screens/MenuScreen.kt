@@ -1,6 +1,8 @@
 package com.example.premierleagueapka.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -12,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.premierleagueapka.data.local.UserPreferences
 import com.example.premierleagueapka.ui.components.AnimatedPremierLogo
+import com.example.premierleagueapka.ui.components.AppCardBorder
 import com.example.premierleagueapka.ui.components.AppScreen
 import com.example.premierleagueapka.ui.components.PremierPurpleColor
 import androidx.compose.material3.Button
@@ -53,6 +56,8 @@ fun MenuButton(text: String, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(vertical = 3.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = PremierPurpleColor),
+        border = BorderStroke(1.dp, AppCardBorder),
+        shape = RoundedCornerShape(10.dp),
         elevation = null
     ) {
         Text(text, fontSize = 14.sp)

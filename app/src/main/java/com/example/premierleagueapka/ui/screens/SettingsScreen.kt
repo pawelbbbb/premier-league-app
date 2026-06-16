@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.premierleagueapka.MainActivity
 import com.example.premierleagueapka.data.local.UserPreferences
 import com.example.premierleagueapka.ui.components.AppScreen
 
@@ -27,8 +28,8 @@ fun SettingsScreen(navController: NavController) {
     var favoriteClub by remember { mutableStateOf(preferences.getFavoriteClub()) }
     var birthDate by remember { mutableStateOf(preferences.getBirthDate()) }
     var savedMessage by remember { mutableStateOf("") }
-    var darkMode by remember { mutableStateOf(false) }
     var notifications by remember { mutableStateOf(true) }
+    var anthemEnabled by remember { mutableStateOf(preferences.isAnthemEnabled()) }
 
     AppScreen("Ustawienia", navController) {
         Column(Modifier.fillMaxSize().padding(top = 16.dp)) {
@@ -75,7 +76,11 @@ fun SettingsScreen(navController: NavController) {
             if (savedMessage.isNotEmpty()) {
                 Text(savedMessage, modifier = Modifier.padding(bottom = 8.dp))
             }
-            ToggleRow("Dark Mode", darkMode) { darkMode = it }
+            ToggleRow("Hymn w tle", anthemEnabled) {
+                anthemEnabled = it
+                (context as? MainActivity)?.setAnthemPlaybackEnabled(it)
+                    ?: preferences.setAnthemEnabled(it)
+            }
             ToggleRow("Powiadomienia", notifications) { notifications = it }
         }
     }

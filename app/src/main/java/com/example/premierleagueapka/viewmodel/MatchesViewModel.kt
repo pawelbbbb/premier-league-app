@@ -16,6 +16,7 @@ class MatchesViewModel(
 ) : ViewModel() {
 
     private val repository = MatchesRepository(db, FootballApiProvider.api)
+    private var hasLoaded = false
 
     var matches = mutableStateListOf<MatchEntity>()
         private set
@@ -30,6 +31,9 @@ class MatchesViewModel(
         private set
 
     fun load() {
+        if (hasLoaded) return
+        hasLoaded = true
+
         viewModelScope.launch {
             isLoading.value = true
             matches.clear()

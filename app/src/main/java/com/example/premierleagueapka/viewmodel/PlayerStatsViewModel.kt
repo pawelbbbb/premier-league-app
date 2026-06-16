@@ -16,6 +16,7 @@ class PlayerStatsViewModel(
 ) : ViewModel() {
 
     private val repository = PlayerStatsRepository(db, FootballApiProvider.footballDataApi)
+    private var hasLoaded = false
 
     var players = mutableStateListOf<PlayerStatsEntity>()
         private set
@@ -30,6 +31,9 @@ class PlayerStatsViewModel(
         private set
 
     fun load() {
+        if (hasLoaded) return
+        hasLoaded = true
+
         viewModelScope.launch {
             isLoading.value = true
             players.clear()

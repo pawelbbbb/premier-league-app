@@ -20,7 +20,7 @@ import com.example.premierleagueapka.data.local.entity.NewsEntity
         PlayerStatsEntity::class,
         NewsEntity::class
     ],
-    version = 5
+    version = 7
 )
 abstract class AppDatabase : RoomDatabase() {
 

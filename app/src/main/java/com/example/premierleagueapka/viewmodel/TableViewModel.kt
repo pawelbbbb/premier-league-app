@@ -15,11 +15,15 @@ class TableViewModel(
 ) : ViewModel() {
 
     private val repository = MatchesRepository(db, FootballApiProvider.api)
+    private var hasLoaded = false
 
     var teams = mutableStateListOf<TeamEntity>()
         private set
 
     fun load() {
+        if (hasLoaded) return
+        hasLoaded = true
+
         viewModelScope.launch {
             teams.clear()
             teams.addAll(repository.refreshTable())

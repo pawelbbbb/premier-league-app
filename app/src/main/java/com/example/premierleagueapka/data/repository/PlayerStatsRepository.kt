@@ -12,6 +12,15 @@ class PlayerStatsRepository(
     private val api: FootballDataApi
 ) {
     suspend fun refreshAndLoad(): PlayerStatsLoadResult = withContext(Dispatchers.IO) {
+        val local = db.playerStatsDao().getAll()
+        if (local.isNotEmpty()) {
+            return@withContext PlayerStatsLoadResult(
+                players = local,
+                source = "Room lokalnie",
+                error = null
+            )
+        }
+
         val token = BuildConfig.FOOTBALL_DATA_API_KEY
         val apiResult = if (token.isBlank()) {
             Result.failure(IllegalStateException("Brak FOOTBALL_DATA_API_KEY w local.properties"))

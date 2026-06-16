@@ -10,6 +10,7 @@ import com.example.premierleagueapka.ui.screens.MatchesScreen
 import com.example.premierleagueapka.ui.screens.MatchstatsScreen
 import com.example.premierleagueapka.ui.screens.MediaScreen
 import com.example.premierleagueapka.ui.screens.MenuScreen
+import com.example.premierleagueapka.ui.screens.NewsDetailScreen
 import com.example.premierleagueapka.ui.screens.NewsScreen
 import com.example.premierleagueapka.ui.screens.SettingsScreen
 import com.example.premierleagueapka.ui.screens.PlayerStatsScreen
@@ -44,8 +45,16 @@ fun NavGraph(navController: NavHostController) {
             PlayerStatsScreen(navController)
         }
 
-        composable("newsy") {
+        composable("news") {
             NewsScreen(navController)
+        }
+
+        composable(
+            "news_detail/{newsId}",
+            arguments = listOf(navArgument("newsId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val newsId = backStackEntry.arguments?.getInt("newsId") ?: 0
+            NewsDetailScreen(navController, newsId)
         }
 
         composable("media") {

@@ -1,6 +1,7 @@
 package com.example.premierleagueapka.data.local
 
 import android.content.Context
+import android.content.SharedPreferences
 
 class UserPreferences(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
@@ -10,6 +11,22 @@ class UserPreferences(context: Context) {
     fun getFavoriteClub(): String = prefs.getString(KEY_CLUB, DEFAULT_CLUB) ?: DEFAULT_CLUB
 
     fun getBirthDate(): String = prefs.getString(KEY_BIRTH_DATE, "") ?: ""
+
+    fun isAnthemEnabled(): Boolean = prefs.getBoolean(KEY_ANTHEM_ENABLED, true)
+
+    fun setAnthemEnabled(enabled: Boolean) {
+        prefs.edit()
+            .putBoolean(KEY_ANTHEM_ENABLED, enabled)
+            .apply()
+    }
+
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
 
     fun save(name: String, favoriteClub: String, birthDate: String) {
         prefs.edit()
@@ -23,6 +40,7 @@ class UserPreferences(context: Context) {
         private const val KEY_NAME = "name"
         private const val KEY_CLUB = "favorite_club"
         private const val KEY_BIRTH_DATE = "birth_date"
+        const val KEY_ANTHEM_ENABLED = "anthem_enabled"
         private const val DEFAULT_NAME = "Paweł"
         private const val DEFAULT_CLUB = "Tottenham"
     }

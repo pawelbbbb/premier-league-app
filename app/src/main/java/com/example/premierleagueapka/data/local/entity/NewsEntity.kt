@@ -9,5 +9,6 @@ data class NewsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
-    val content: String
+    val content: String,
+    val imageName: String
 )
